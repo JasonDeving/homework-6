@@ -12,7 +12,7 @@
 		
 		// Creates AJAX call for the specific animal being 
 		$.ajax({url: queryURL, method: 'GET'}).done(function(response) {
-
+			console.log(queryURL);
 			var results = response.data;
 			for (var i = 0; i < results.length; i++) { 
 					var animalDiv = $('<div>');
@@ -20,8 +20,11 @@
                     var p = $('<p>').text("Rating: " + results[i].rating);
 
                     var animalImage = $('<img>');
-                    animalImage.attr('src', results[i].images.fixed_height.url);
-
+                    animalImage.addClass("animalImage");
+                    animalImage.attr('src', results[i].images.fixed_height_still.url);
+                    animalImage.attr('data-state', 'still');
+                    animalImage.attr('data-still', results[i].images.fixed_height_still.url);
+                    animalImage.attr('data-animate', results[i].images.fixed_height.url);
                     animalDiv.append(p);
                     animalDiv.append(animalImage);
                     $('#animalsView').prepend(animalDiv);
@@ -34,7 +37,6 @@
 
 	}
 
-	// ========================================================
 
 	// Generic function for displaying movie data 
 	function renderButtons(){ 
@@ -74,13 +76,24 @@
 		return false;
 	})
 
-	// ========================================================
 
 	// Generic function for displaying the movieInfo
 	$(document).on('click', '.animal', displayAnimalInfo);
 
 
-	// ========================================================
-
 	// This calls the renderButtons() function
 	renderButtons();
+
+
+$(".animalImage").click(function(){
+	var state = $(this).attr('data-state'); 
+	        
+            if ( state == 'still'){
+                $(this).attr('src', $(this).data('animate'));
+                $(this).attr('data-state', 'animate');
+            }else{
+                $(this).attr('src', $(this).data('still'));
+                $(this).attr('data-state', 'still');
+            }
+});
+
